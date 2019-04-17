@@ -20,15 +20,14 @@ public class AsyncTaskService<T> {
 
     //total task counts to execute, default value is maximum int value
     private int totalLimit = Integer.MAX_VALUE;
-
+    //core thread counts that perform time consuming tasks
     private int producerCoreThreads = 1;
-
+    //max thread counts that perform time consuming tasks
     private int producerMaxThreads = 1;
-
     //for purpose of preventing OOM, default 10000
     private int queuedProducerTaskLimit = 10000;
 
-    private ThreadPoolExecutor threadPoolExecutor;
+    private RetryThreadPoolExecutor threadPoolExecutor;
 
 
     private CountDownLatch countDownLatch;
@@ -41,16 +40,9 @@ public class AsyncTaskService<T> {
 
     private AtomicInteger consumedCount;
 
-    public AsyncTaskService(int totalLimit, int producerCoreThreads, int producerMaxThreads, int queuedProducerTaskLimit, Consumer<T> consumer) {
-        if (totalLimit < 1 || producerCoreThreads < 1 || producerMaxThreads < 1 || queuedProducerTaskLimit < 1)
-            throw new IllegalArgumentException("properties could not be less than 1");
-        this.totalLimit = totalLimit;
-        this.producerCoreThreads = producerCoreThreads;
-        this.producerMaxThreads = producerMaxThreads;
-        this.queuedProducerTaskLimit = queuedProducerTaskLimit;
-
+    public AsyncTaskService(Consumer<T> consumer) {
         this.countDownLatch = new CountDownLatch(totalLimit);
-        this.threadPoolExecutor = new RetryableThreadPoolExecutor(producerCoreThreads, producerMaxThreads, 0L,
+        this.threadPoolExecutor = new RetryThreadPoolExecutor(producerCoreThreads, producerMaxThreads, 0L,
                 TimeUnit.SECONDS, new LinkedBlockingQueue<>(queuedProducerTaskLimit));
         this.resultQueue = new LinkedBlockingQueue<>();
         this.producedCount = new AtomicInteger();
@@ -58,6 +50,18 @@ public class AsyncTaskService<T> {
         this.consumer = consumer;
 
         startConsumer();
+        threadPoolExecutor.getCountdownListener().listenCountdown(countDownLatch);
+    }
+
+    public AsyncTaskService(int totalLimit, int producerCoreThreads, int producerMaxThreads, int queuedProducerTaskLimit, Consumer<T> consumer) {
+        this(consumer);
+
+        if (totalLimit < 1 || producerCoreThreads < 1 || producerMaxThreads < 1 || queuedProducerTaskLimit < 1)
+            throw new IllegalArgumentException("properties could not be less than 1");
+        this.totalLimit = totalLimit;
+        this.producerCoreThreads = producerCoreThreads;
+        this.producerMaxThreads = producerMaxThreads;
+        this.queuedProducerTaskLimit = queuedProducerTaskLimit;
     }
 
     /**
