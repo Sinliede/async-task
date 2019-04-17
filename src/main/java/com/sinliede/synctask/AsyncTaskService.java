@@ -55,6 +55,7 @@ public class AsyncTaskService<T> {
         this.resultQueue = new LinkedBlockingQueue<>();
         this.producedCount = new AtomicInteger();
         this.consumedCount = new AtomicInteger();
+        this.consumer = consumer;
 
         startConsumer();
     }
