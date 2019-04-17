@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+
+group = 'com.sinliede.asynctask'
+version '0.0.1'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+buildDir = 'target'
+
+ext {
+    springBootVersion = '1.5.6.RELEASE'
+    mavenPublicUrl = 'http://nexus.5dg.co/repository/maven-public'
+    mavenReleaseUrl = 'http://nexus.5dg.co/repository/maven-releases'
+    mavenSnapshotUrl = 'http://nexus.5dg.co/repository/maven-snapshots'
+    springVersion = '4.3.10.RELEASE'
+    slf4jVersion = '1.7.25'
+}
+
+repositories {
+    mavenLocal()
+    maven { url "http://nexus.5dg.co/repository/maven-public" }
+    maven { url "http://nexus.5dg.co/repository/maven-releases" }
+    maven { url "http://nexus.5dg.co/repository/maven-snapshots" }
+    mavenCentral()
+}
+
+
+dependencies {
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+
+    compile "org.apache.httpcomponents:httpclient:4.5.3"
+    compile "org.apache.httpcomponents:httpcore:4.4.6"
+    compile "commons-lang:commons-lang:2.6"
+
+    testCompile "junit:junit:4.12"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
