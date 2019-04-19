@@ -4,7 +4,7 @@ An async task executor in producer-consumer mod which could automatically shutdo
 ## Usage
 This project is used for producer-consumer/producer-consumer situation when the consumer/producer spends much more time than thee producer and the consumer.
 
-eg: There is a affair which reads large quantity of data from file and then do some time consuming task such like networks and finally write results to disk.
+eg: An affair which reads large quantity of data from file and then do some time consuming task such like networks and finally write results to disk.
 
 ## How to use
 
