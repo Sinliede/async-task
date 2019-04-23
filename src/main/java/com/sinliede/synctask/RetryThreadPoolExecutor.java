@@ -24,8 +24,8 @@ public class RetryThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     public RetryThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
-        setRejectedExecutionHandler(new RetryRejectExecutionHandler());
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        this.setThreadFactory(threadFactory);
     }
 
     @Override
