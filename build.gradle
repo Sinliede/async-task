@@ -11,19 +11,18 @@ targetCompatibility = 1.8
 buildDir = 'target'
 
 ext {
-    mavenPublicUrl = 'http://nexus.sinliede.com/repository/maven-public'
-    mavenReleaseUrl = 'http://nexus.sinliede.com/repository/maven-releases'
-    mavenSnapshotUrl = 'http://nexus.sinliede.com/repository/maven-snapshots'
+    mavenPublicUrl = 'http://localhost:8081/repository/maven-public'
+    mavenReleaseUrl = 'http://localhost:8081/repository/maven-releases'
+    mavenSnapshotUrl = 'http://localhost:8081/repository/maven-snapshots'
 }
 
 repositories {
     mavenLocal()
-    maven { url "http://nexus.sinliede.com/repository/maven-public" }
-    maven { url "http://nexus.sinliede.com/repository/maven-releases" }
-    maven { url "http://nexus.sinliede.com/repository/maven-snapshots" }
+    maven { url "http://localhost:8081/repository/maven-public" }
+    maven { url "http://localhost:8081/repository/maven-releases/" }
+    maven { url "http://localhost:8081/repository/maven-snapshots" }
     mavenCentral()
 }
-
 
 dependencies {
 
@@ -38,3 +37,15 @@ artifacts {
     archives sourcesJar
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenReleaseUrl) {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+            snapshotRepository(url: mavenSnapshotUrl) {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+        }
+    }
+}

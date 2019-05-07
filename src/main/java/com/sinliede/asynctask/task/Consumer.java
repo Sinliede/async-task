@@ -1,4 +1,4 @@
-package com.sinliede.synctask.task;
+package com.sinliede.asynctask.task;
 
 /**
  *

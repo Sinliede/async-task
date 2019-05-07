@@ -1,4 +1,4 @@
-package com.sinliede.synctask;
+package com.sinliede.asynctask;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.LockSupport;
@@ -13,6 +13,7 @@ import java.util.concurrent.locks.LockSupport;
  */
 public class RetryThreadPoolExecutor extends ThreadPoolExecutor {
 
+    //since this queue stores blocked producer threads, it is unnecessary to give a maximum queue size
     private BlockingQueue<Thread> rejectedTaskQueue = new LinkedBlockingQueue<>();
 
     private CountdownListener countdownListener;
