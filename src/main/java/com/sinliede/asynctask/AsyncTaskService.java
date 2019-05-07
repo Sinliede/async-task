@@ -22,12 +22,6 @@ public class AsyncTaskService<T> {
 
     //total task counts to execute, default value is maximum int value
     private int totalLimit;
-    //core thread counts that perform time consuming tasks
-    private int producerCoreThreads;
-    //max thread counts that perform time consuming tasks
-    private int producerMaxThreads;
-    //for purpose of preventing OOM, default 10000
-    private int queuedProducerTaskLimit;
 
     private RetryThreadPoolExecutor threadPoolExecutor;
 
@@ -51,10 +45,6 @@ public class AsyncTaskService<T> {
         if (totalLimit < 1 || producerCoreThreads < 1 || producerMaxThreads < 1 || queuedProducerTaskLimit < 1)
             throw new IllegalArgumentException("properties could not be less than 1");
         this.totalLimit = totalLimit;
-        this.producerCoreThreads = producerCoreThreads;
-        this.producerMaxThreads = producerMaxThreads;
-        this.queuedProducerTaskLimit = queuedProducerTaskLimit;
-
         this.countDownLatch = new CountDownLatch(totalLimit);
         this.threadPoolExecutor = new RetryThreadPoolExecutor(producerCoreThreads, producerMaxThreads, 0L,
                 TimeUnit.SECONDS, new LinkedBlockingQueue<>(queuedProducerTaskLimit));
