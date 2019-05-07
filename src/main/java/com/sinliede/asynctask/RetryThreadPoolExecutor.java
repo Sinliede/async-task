@@ -32,7 +32,7 @@ public class RetryThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
-        if (getQueue().remainingCapacity() == 0 && !rejectedTaskQueue.isEmpty()) {
+        if (getQueue().remainingCapacity() != 0 && !rejectedTaskQueue.isEmpty()) {
             Thread thread = rejectedTaskQueue.poll();
             if (null != thread) {
                 LockSupport.unpark(thread);

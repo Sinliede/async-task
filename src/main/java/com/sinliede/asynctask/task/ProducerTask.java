@@ -13,18 +13,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ProducerTask<T> extends AbstractTask<T> {
 
-    int totalLimit;
-
     AtomicInteger producedCount;
 
     CountDownLatch countDownLatch;
 
     Producer<T> producer;
 
-    public ProducerTask(BlockingQueue<T> resultQueue, int totalLimit, AtomicInteger producedCount,
+    public ProducerTask(BlockingQueue<T> resultQueue, AtomicInteger producedCount,
                         CountDownLatch countDownLatch, Producer<T> producer) {
         super(resultQueue);
-        this.totalLimit = totalLimit;
         this.producedCount = producedCount;
         this.countDownLatch = countDownLatch;
         this.producer = producer;
@@ -32,10 +29,7 @@ public class ProducerTask<T> extends AbstractTask<T> {
 
     @Override
     public void run() {
-        do {
-            T t = producer.produce();
-            resultQueue.offer(t);
-            countDownLatch.countDown();
-        } while (producedCount.getAndIncrement() < totalLimit);
+        resultQueue.offer(producer.produce());
+        countDownLatch.countDown();
     }
 }

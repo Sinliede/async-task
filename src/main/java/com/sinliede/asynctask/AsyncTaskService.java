@@ -25,7 +25,6 @@ public class AsyncTaskService<T> {
 
     private RetryThreadPoolExecutor threadPoolExecutor;
 
-
     private CountDownLatch countDownLatch;
 
     private BlockingQueue<T> resultQueue;
@@ -62,7 +61,7 @@ public class AsyncTaskService<T> {
      * @param producer
      */
     public void submitTask(Producer<T> producer) {
-        ProducerTask<T> producerTask = new ProducerTask<>(resultQueue, totalLimit, producedCount, countDownLatch, producer);
+        ProducerTask<T> producerTask = new ProducerTask<>(resultQueue, producedCount, countDownLatch, producer);
         threadPoolExecutor.execute(producerTask);
     }
 
