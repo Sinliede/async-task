@@ -61,7 +61,7 @@ public class RetryThreadPoolExecutor extends ThreadPoolExecutor {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                threadPoolExecutor.shutdown();
+                threadPoolExecutor.shutdownNow();
             }).start();
         }
     }
